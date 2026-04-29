@@ -58,7 +58,7 @@ const RegistrationForm = ({ scannedCode, onFormFocus }) => {
         }
 
         try {
-            const res = await axios.post('http://localhost:3000/api/register', formData);
+            const res = await axios.post('https://lucky-app-connect--haseebmine24.replit.app/api/register', formData);
             if (res.data.success) {
                 setErrors({ success: "Success! You are in the draw." });
                 setFormData({ userCode: '', name: '', email: '', organization: '', contact: '' });
