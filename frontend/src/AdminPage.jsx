@@ -24,7 +24,7 @@ const AdminPage = () => {
         }, 80);
 
         try {
-            const res = await axios.get('https://lucky-app-connect--haseebmine24.replit.app/api/pick-winner');
+            const res = await axios.get('https://error-debugger--hejaz6784.replit.app/api/pick-winner');
 
             setTimeout(() => {
                 clearInterval(spinInterval);

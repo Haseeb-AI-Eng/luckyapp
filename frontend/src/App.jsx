@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import RegistrationForm from './RegistrationForm';
 import AdminPage from './AdminPage';
 import QRDisplay from './QRDisplay';
@@ -11,11 +11,11 @@ const App = () => {
   const [hasScannedQR, setHasScannedQR] = useState(false);
   const scrollContainerRef = useRef(null);
 
-  const handleQRScanned = (code) => {
-    console.log('✅ QR Code scanned, auto-navigating to form');
+  const handleQRScanned = useCallback((code) => {
+    console.log('✅ QR Code scanned, ready for registration');
     setQrCode(code);
-    setHasScannedQR(true);
-  };
+    // Don't auto-advance - let user confirm they've scanned
+  }, []);
 
   const pages = [
     {
@@ -60,6 +60,12 @@ const App = () => {
                 <div className="mt-0.5">
                   <QRDisplay onScanReady={(code) => { handleQRScanned(code); }} />
                 </div>
+                <button
+                  onClick={() => setHasScannedQR(true)}
+                  className="mt-6 px-8 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl transition-all active:scale-95 shadow-lg"
+                >
+                  ✅ I've Scanned the QR Code
+                </button>
               </div>
             </div>
           ) : (
