@@ -115,7 +115,7 @@ const AdminPage = () => {
                             className={`w-full py-4 rounded-2xl font-black text-xl uppercase transition-all shadow-xl active:scale-95
                                 ${isSpinning
                                     ? 'bg-slate-700 text-slate-400 cursor-not-allowed opacity-80'
-                                    : 'bg-gradient-to-r from-pink-500 to-green-500 text-white border-b-8 border-slate-900 hover:from-pink-400 hover:to-green-400'}`}
+                                    : 'bg-pink-500 text-white border-b-8 border-slate-900 hover:bg-pink-600'}`}
                         >
                             {isSpinning ? 'SPINNING...' : 'PULL TO START'}
                         </button>
