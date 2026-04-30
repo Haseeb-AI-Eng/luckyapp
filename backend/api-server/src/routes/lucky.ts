@@ -126,10 +126,14 @@ router.post("/register", async (req, res) => {
   }
 });
 
-router.get("/generate-qr", async (_req, res) => {
-  const formUrl = "https://forms.gle/PaeR46GeuVPYCTPm6";
+router.get("/generate-qr", async (req, res) => {
+  // Use the host from the request to build the registration URL
+  const host = req.get("host");
+  const protocol = req.protocol;
+  const registrationUrl = `${protocol}://${host}/?page=registration`;
+  
   try {
-    const qrImage = await QRCode.toDataURL(formUrl, {
+    const qrImage = await QRCode.toDataURL(registrationUrl, {
       color: { dark: "#1e40af", light: "#00000000" },
       margin: 2,
       width: 300,
@@ -156,6 +160,8 @@ router.get("/submissions", async (_req, res) => {
 
 router.get("/pick-winner", async (_req, res) => {
   try {
+    // We pick from all submissions where isWinner is false.
+    // This includes users registered from both laptop and mobile devices.
     const eligible: Submission[] = await db
       .select()
       .from(submissions)
@@ -169,11 +175,13 @@ router.get("/pick-winner", async (_req, res) => {
 
     const winner = eligible[0]!;
 
+    // Mark as winner in submissions table
     await db
       .update(submissions)
       .set({ isWinner: true })
       .where(eq(submissions.id, winner.id));
 
+    // Log into winners table
     await db.insert(winners).values({
       userId: winner.userId,
       firstName: winner.firstName,
@@ -182,7 +190,8 @@ router.get("/pick-winner", async (_req, res) => {
       phone: winner.phone,
     });
 
-    // Send winner email ONLY here, after the slot machine picks them.
+    // Send winner email ONLY to the person who just won.
+    // The registration routes should NOT send any emails.
     try {
       const transporter = getTransporter();
       await transporter.sendMail({
@@ -191,11 +200,11 @@ router.get("/pick-winner", async (_req, res) => {
         subject: "🎉 Congratulations! You've been selected as a winner!",
         html: winnerEmailHtml(winner),
       });
-      logger.info({ to: winner.email }, "Winner email sent");
+      logger.info({ to: winner.email }, "Winner email sent successfully");
     } catch (emailErr) {
       logger.error(
         { err: emailErr, to: winner.email },
-        "Email send failed",
+        "Winner email delivery failed",
       );
     }
 

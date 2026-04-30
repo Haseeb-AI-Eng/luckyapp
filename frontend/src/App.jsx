@@ -6,9 +6,13 @@ import ZongLogo from './assets/Zong-Business-Logo.png';
 import bgImage from './assets/green-background.jpeg';
 
 const App = () => {
-  const [currentPage, setCurrentPage] = useState(0);
+  // Check URL parameters for default page
+  const urlParams = new URLSearchParams(window.location.search);
+  const initialPage = urlParams.get('page') === 'registration' ? 1 : 0;
+
+  const [currentPage, setCurrentPage] = useState(initialPage);
   const [qrCode, setQrCode] = useState(null);
-  const [hasScannedQR, setHasScannedQR] = useState(false);
+  const [hasScannedQR, setHasScannedQR] = useState(initialPage === 1);
   const scrollContainerRef = useRef(null);
 
   const handleQRScanned = useCallback((code) => {

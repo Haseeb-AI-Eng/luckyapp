@@ -40,7 +40,7 @@ const QRDisplay = ({ onScanReady }) => {
                 if (onScanReady) onScanReady(code);
             }
         });
-    }, [onScanReady]);
+    }, []);
 
     return (
         <div className="w-full max-w-md">

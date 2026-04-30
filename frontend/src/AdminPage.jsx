@@ -18,22 +18,12 @@ const AdminPage = () => {
         setIsSpinning(true);
         setWinner(null);
 
-        const spinInterval = setInterval(() => {
-            const randomCode = Math.random().toString(36).substring(2, 5).toUpperCase() + "-" + Math.floor(10000 + Math.random() * 90000);
-            setDisplayCode(randomCode);
-        }, 80);
-
         try {
-            const res = await axios.get('https://error-debugger--hejaz6784.replit.app/api/pick-winner');
-
-            setTimeout(() => {
-                clearInterval(spinInterval);
-                setWinner(res.data.winner);
-                setDisplayCode(res.data.winner.userCode);
-                setIsSpinning(false);
-            }, 3500);
+            const res = await axios.get('/api/pick-winner');
+            setWinner(res.data.winner);
+            setDisplayCode(res.data.winner.userCode);
+            setIsSpinning(false);
         } catch (err) {
-            clearInterval(spinInterval);
             setIsSpinning(false);
             setDisplayCode("ERROR");
             console.error("Draw failed:", err);

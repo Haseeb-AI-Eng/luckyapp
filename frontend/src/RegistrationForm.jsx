@@ -58,14 +58,14 @@ const RegistrationForm = ({ scannedCode, onFormFocus }) => {
         }
 
         try {
-            const res = await axios.post('https://error-debugger--hejaz6784.replit.app/api/register', formData);
+            const res = await axios.post('/api/register', formData);
             if (res.data.success) {
                 setErrors({ success: "Success! You are in the draw." });
                 setFormData({ userCode: '', name: '', email: '', organization: '', contact: '' });
                 setTimeout(() => setErrors({}), 3000);
             }
         } catch (err) {
-            const errorMsg = err.response?.data?.message || "Registration failed.";
+            const errorMsg = err.response?.data?.error || err.response?.data?.message || "Registration failed.";
             setErrors({ submit: errorMsg });
         }
         setLoading(false);
